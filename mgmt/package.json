@@ -1,0 +1,7 @@
+{
+  "name": "sslcode-mgmt",
+  "version": "0.1.0",
+  "dependencies": {
+     "tencentcloud-sdk-nodejs": "^4.0.80"
+  }
+}
