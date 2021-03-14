@@ -1,5 +1,8 @@
+#!./vscode-server-linux-x64-web/node
 
-const patchedWebsocket = `
+const fs = require('fs');
+
+const patchedWebSocket = `
 let realWebSocket = WebSocket;
 WebSocket = function(url, ...args) {
   const path = url.substr(url.indexOf('/?'));
@@ -8,3 +11,13 @@ WebSocket = function(url, ...args) {
 };
 WebSocket.prototype = realWebSocket.prototype;
 `
+
+const patchedPort = `port:window.location.protocol==='https:'?443:80`;
+
+const workbenchPath = 'vscode-server-linux-x64-web/out/vs/workbench/workbench.web.api.js';
+const rawFile = fs.readFileSync(workbenchPath).toString();
+if (rawFile.includes('realWebSocket')) {
+  process.exit();
+}
+fs.writeFileSync(workbenchPath, patchedWebSocket + rawFile.replace('port:80', patchedPort));
+
