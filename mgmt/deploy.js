@@ -127,7 +127,7 @@ async function createInstance() {
             SubnetId: 'subnet-rtek5vp5',
             Ipv6AddressCount: 0,
         },
-        InstanceType: 'S2.SMALL1',
+        InstanceType: 'S2.LARGE8',
         ImageId: 'img-efriekq8',
         SystemDisk: {
             DiskSize: 50,
@@ -187,6 +187,7 @@ exports.main_handler = async (event, context) => {
     const disk = await createDisk(snapshot);
     const instance = await createInstance();
     await attachDisk(disk, instance);
+    console.log(`http://${instance.PublicIpAddresses[0]}:2515`);
 };
 
 exports.main_handler();

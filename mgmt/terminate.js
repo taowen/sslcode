@@ -133,6 +133,9 @@ async function getDisk() {
 }
 
 async function terminateDisk(disk) {
+    while ((await getDisk()).DiskState !== 'UNATTACHED') {
+        await sleep(500);
+    }
     const result = await cbsClient.TerminateDisks({
         DiskIds: [disk.DiskId],
     });
