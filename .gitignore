@@ -2,3 +2,4 @@ vscode-server-linux-x64-web
 vscode-web.tar.gz
 ssl-proxy-linux-amd64
 certs
+*.log
