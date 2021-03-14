@@ -1,0 +1,10 @@
+
+const patchedWebsocket = `
+let realWebSocket = WebSocket;
+WebSocket = function(url, ...args) {
+  const path = url.substr(url.indexOf('/?'));
+  const protocol = window.location.protocol === 'http:' ? 'ws:' : 'wss:'
+  return new realWebSocket(protocol + '//' + window.location.host + path, ...args);
+};
+WebSocket.prototype = realWebSocket.prototype;
+`
