@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+exec ./start "$(curl -s http://metadata.tencentyun.com/meta-data/public-ipv4)"
