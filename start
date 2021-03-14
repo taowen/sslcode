@@ -1,0 +1,26 @@
+#!./vscode-server-linux-x64-web/node
+const { spawn } = require('child_process');
+
+const externalIp = process.argv[2];
+
+if (!externalIp) {
+  console.error('please specify external ip as argument');
+  process.exit(1);
+}
+
+
+const vscode = spawn('vscode-server-linux-x64-web/server.sh', 
+  ['--host', '127.0.0.1', '--port', '8000', '--disable-telemetry']);
+vscode.stderr.on('data', (data) => {
+  process.stderr.write(data);
+});
+vscode.stdout.on('data', (data) => {
+  process.stdout.write(data);
+  if(data.toString().includes('tkn=')) {
+    console.log('External', data.toString().replace('http://localhost:8000/', `https://${externalIp}.nip.io/`));
+  }
+});
+
+
+spawn('./ssl-proxy-linux-amd64', 
+  ['-from', '0.0.0.0:443', '-to', '127.0.0.1:8000', `-domain=${externalIp}.nip.io`], { stdio: 'inherit' });
