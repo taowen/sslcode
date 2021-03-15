@@ -61,7 +61,8 @@ async function assertNoDisk() {
     }
 }
 
-async function createDisk(snapshot) {
+async function createDisk() {
+    const snapshot = await findSnapshot();
     await assertNoDisk();
     const result = await cbsClient.CreateDisks({
         DiskChargeType: 'POSTPAID_BY_HOUR',
@@ -128,7 +129,7 @@ async function createInstance() {
             Ipv6AddressCount: 0,
         },
         InstanceType: 'S2.LARGE8',
-        ImageId: 'img-efriekq8',
+        ImageId: 'img-bgfz0fdm',
         SystemDisk: {
             DiskSize: 50,
             DiskType: 'CLOUD_PREMIUM',
@@ -183,9 +184,10 @@ async function attachDisk(disk, instance) {
 }
 
 exports.main_handler = async (event, context) => {
-    const snapshot = await findSnapshot();
-    const disk = await createDisk(snapshot);
-    const instance = await createInstance();
+    let disk = createDisk();
+    let instance = createInstance();
+    disk = await disk;
+    instance = await instance;
     await attachDisk(disk, instance);
     console.log(`http://${instance.PublicIpAddresses[0]}:2515`);
 };
